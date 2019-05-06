@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="default_color">#237DAE</color>
+    <color name="default_color_darker">#0a415e</color>
+    <color name="default_color_light">#008dda</color>
+
+    <color name="trans_def">#80237dae</color>
+    <color name="android_def">#009688</color>
+    <color name="blue">#0070AD</color>
+    <color name="gold">#e7c300</color>
+    <color name="red">#9b000e</color>
+    <color name="green">#007b08</color>
+    <color name="color4">#ffcfc4</color>
+    <color name="color8">#ffb4a3</color>
+    <color name="color16">#ff866b</color>
+    <color name="color32">#ff6542</color>
+    <color name="color64">#e2401b</color>
+    <color name="color128">#e7c300</color>
+    <color name="color512">#FFD700</color>
+    <color name="dark">#00162F</color>
+    <color name="light">#f2f7ff</color>
+    <color name="light_trans">#aff2f7ff</color>
+    <color name="light_trans_high">#32f2f7ff</color>
+    <color name="white">#b3ffffff</color>
+    <color name="trans_white">#1AFFFFFF</color>
+    <color name="fifty_white">#4bFFFFFF</color>
+    <color name="fifty_white_twice">#808c8c8c</color>
+    <color name="trans_black">#b400162F</color>
+    <color name="trans_black_high">#4b00162F</color>
+    <color name="trans_black_high_twice">#8000162F</color>
+    <color name="gplus">#DD4D40</color>
+    <color name="twitter">#5EA9DD</color>
+    <color name="facebook">#334E99</color>
+</resources>

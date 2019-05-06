@@ -1,0 +1,15 @@
+<resources>
+
+    <string name="app_name">Binary Bytes</string>
+    <string name="press_back_again_to_exit">Press Back Again to Exit</string>
+    <string name="menu">Information</string>
+
+    <string name="updateAvailable">New Update Available | Click Here to Install…!</string>
+    <string name="rate">Please Rate &amp; Write Review</string>
+    <string name="supportTitle">Support Center</string>
+    <string name="supportDesc">Help &amp; Feedback</string>
+    <string name="support">Support@GeeksEmpire.net</string>
+    <string name="feedback_tag">Binary Bytes Direct Help | Feedback</string>
+    <string name="alphaTitle">Thanks for Helping me</string>
+
+</resources>

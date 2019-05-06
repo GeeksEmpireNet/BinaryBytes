@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Binary Bytes</string>
+    <string name="high_score">Best</string>
+    <string name="score">Score</string>
+    <string name="you_win">You Win!</string>
+    <string name="game_over">Game Over!</string>
+    <string name="go_on">Tap to Continue</string>
+    <string name="for_now">For now…</string>
+    <string name="endless">"Endless" Mode</string>
+    <string name="reset">New Game</string>
+    <string name="continue_game">Continue</string>
+    <string name="reset_dialog_title">Reset to New Game</string>
+    <string name="reset_dialog_message">Are You Sure to Reset the Game?</string>
+    <string name="closemsg">Do you want to Stop Playing?</string>
+    <string name="yes">Yes</string>
+
+    <string name="updateAvailable">New Update Available | Click Here to Install…!</string>
+    <string name="rate">Please Rate &amp; Write Review</string>
+
+    <string name="link_play_store">https://play.google.com/store/apps/details?id=</string>
+
+</resources>

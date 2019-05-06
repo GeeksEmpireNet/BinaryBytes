@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="net.geekstools.numbers.NumbersActivity"
+    android:background="@color/light">
+
+    <Button
+        android:id="@+id/rewardVideo"
+        android:layout_width="match_parent"
+        android:layout_height="113dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:padding="3dp"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:textColor="@color/light"
+        android:text="@string/rewardedVideoInfo"
+        android:textAllCaps="false"
+        android:background="@drawable/video_rewarded_background"
+        android:visibility="invisible" />
+
+    <WebView
+        android:id="@+id/webGame"
+        android:layout_width="match_parent"
+        android:layout_height="457dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/light" />
+
+    <RelativeLayout
+        android:id="@+id/guide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:background="@color/default_color">
+
+        <ImageView
+            android:id="@+id/arrows"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="121dp"
+            android:layout_marginBottom="21dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/arrows" />
+
+        <ImageView
+            android:id="@+id/dots"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_margin="7dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/arrows"
+            android:background="@drawable/dots" />
+
+        <ImageView
+            android:id="@+id/right"
+            android:layout_below="@id/arrows"
+            android:layout_width="59dp"
+            android:layout_height="59dp"
+            android:layout_margin="3dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/tile_two" />
+
+        <ImageView
+            android:id="@+id/left"
+            android:layout_below="@id/arrows"
+            android:layout_width="59dp"
+            android:layout_height="59dp"
+            android:layout_margin="3dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/tile_two" />
+
+        <TextView
+            android:id="@+id/appName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="7dp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="33dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/app_name"
+            android:textSize="63sp"
+            android:textColor="@color/light" />
+    </RelativeLayout>
+
+</RelativeLayout>
