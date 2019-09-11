@@ -17,8 +17,8 @@ import android.webkit.WebView
 import android.widget.Button
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import net.geekstools.numbers.Util.Functions.FunctionsClass
+import net.geekstools.numbers.Util.Functions.PublicVariable
 import net.geekstools.numbers.Util.Functions.WebInterface
 
 class NumbersActivity : Activity() {
@@ -34,6 +34,8 @@ class NumbersActivity : Activity() {
     override protected fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web)
+        PublicVariable.eligibleToLoadShowAds = true
+
         functionsClass = FunctionsClass(this@NumbersActivity, applicationContext)
         functionsClass.guideScreen(this@NumbersActivity, false)
 
@@ -136,10 +138,6 @@ class NumbersActivity : Activity() {
     override fun onStart() {
         super.onStart()
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-        val configSettings: FirebaseRemoteConfigSettings = FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build()
-        firebaseRemoteConfig.setConfigSettings(configSettings)
         firebaseRemoteConfig.setDefaults(R.xml.remote_config_default)
         firebaseRemoteConfig.fetch(0)
                 .addOnCompleteListener(this@NumbersActivity, OnCompleteListener<Void> { task ->
@@ -163,6 +161,8 @@ class NumbersActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        PublicVariable.eligibleToLoadShowAds = true
+
         val rewardedPromotionCode = functionsClass.readPreference(".NoAdsRewardedInfo", "RewardedPromotionCode", 0)
         if ((rewardedPromotionCode >= 33)
                 && functionsClass.readPreference(".NoAdsRewardedInfo", "Requested", false) == true) {
@@ -188,6 +188,11 @@ class NumbersActivity : Activity() {
                     + "</font>")
             rewardVideo.append("$rewardedPromotionCode / 33" + Html.fromHtml("<br/>"))
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        PublicVariable.eligibleToLoadShowAds = false
     }
 
     override protected fun onSaveInstanceState(outState: Bundle?) {

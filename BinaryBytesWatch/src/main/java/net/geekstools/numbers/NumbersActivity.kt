@@ -15,9 +15,7 @@ import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.wearable.intent.RemoteIntent
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import net.geekstools.numbers.Util.Functions.FunctionsClass
-
 import net.geekstools.numbers.Util.MainView
 import net.geekstools.numbers.Util.Tile
 
@@ -77,10 +75,6 @@ class NumbersActivity : Activity() {
         }
 
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-        val configSettings = FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build()
-        firebaseRemoteConfig.setConfigSettings(configSettings)
         firebaseRemoteConfig.setDefaults(R.xml.remote_config_default)
         firebaseRemoteConfig.fetch(0)
                 .addOnCompleteListener(this@NumbersActivity, OnCompleteListener<Void> { task ->
