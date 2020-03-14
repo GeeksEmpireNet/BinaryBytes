@@ -1,11 +1,13 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 
+apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '29.0.2'
+    buildToolsVersion '29.0.3'
 
     defaultConfig {
         applicationId "net.geekstools.numbers"
@@ -13,11 +15,12 @@ android {
         minSdkVersion 23
         targetSdkVersion 29
 
-        versionCode 26
-        versionName "1.000.000.26"
+        versionCode 1000
+        versionName "${versionCode}"
 
         wearAppUnbundled true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -27,11 +30,11 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-core:17.2.0'
-    implementation 'com.google.firebase:firebase-messaging:20.0.0'
-    implementation 'com.google.firebase:firebase-config:19.0.0'
-    implementation 'com.google.firebase:firebase-ads:18.2.0'
+    implementation 'com.google.firebase:firebase-core:17.2.3'
+    implementation 'com.google.firebase:firebase-messaging:20.1.2'
+    implementation 'com.google.firebase:firebase-config:19.1.2'
+    implementation 'com.google.firebase:firebase-ads:19.0.0'
 
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.50'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.70"
 }
-apply plugin: 'com.google.gms.google-services'
