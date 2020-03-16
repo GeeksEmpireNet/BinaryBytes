@@ -43,7 +43,7 @@ class NumbersActivity : AppCompatActivity() {
         PublicVariable.eligibleToLoadShowAds = true
 
         functionsClass = FunctionsClass(applicationContext)
-        functionsClass.guideScreen(this@NumbersActivity, false)
+        functionsClass.guideScreen(gameActivityBinding, false)
 
         gamePlayView = GamePlayView(applicationContext, this@NumbersActivity)
 
@@ -62,6 +62,17 @@ class NumbersActivity : AppCompatActivity() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         window.statusBarColor = getColor(R.color.default_color)
         window.navigationBarColor = getColor(R.color.default_color)
+
+        /*
+*
+*
+*
+         * Change to Interface
+         * & Replace sendBroadcast to Interface Functions
+*
+*
+*
+         */
 
         val intentFilter = IntentFilter()
         intentFilter.addAction("ENABLE_REWARDED_VIDEO")
