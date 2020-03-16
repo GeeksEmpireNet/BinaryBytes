@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="GeeksEmpire" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+    <style name="GeeksEmpire" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:colorPrimary">@color/default_color</item>
         <item name="android:colorPrimaryDark">@color/default_color</item>
         <item name="android:colorAccent">@color/default_color</item>

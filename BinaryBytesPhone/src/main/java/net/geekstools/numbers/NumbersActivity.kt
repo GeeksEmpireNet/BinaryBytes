@@ -1,39 +1,39 @@
 package net.geekstools.numbers
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.text.Html
+import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
-import android.webkit.WebSettings
-import android.webkit.WebView
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import kotlinx.android.synthetic.main.game_activity.*
+import net.geekstools.numbers.Game.MainView
+import net.geekstools.numbers.Game.Tile
 import net.geekstools.numbers.Util.Functions.FunctionsClass
 import net.geekstools.numbers.Util.Functions.PublicVariable
-import net.geekstools.numbers.Util.Functions.WebInterface
 
-class NumbersActivity : Activity() {
+class NumbersActivity : AppCompatActivity() {
 
     lateinit var functionsClass: FunctionsClass
-    lateinit var webGame: WebView
 
+    private var mainView: MainView? = null
     lateinit var rewardVideo: Button
 
-    lateinit private var firebaseRemoteConfig: FirebaseRemoteConfig
+    lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
-    @SuppressLint("SetJavaScriptEnabled")
-    override protected fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web)
+        setContentView(R.layout.game_activity)
+
         PublicVariable.eligibleToLoadShowAds = true
 
         functionsClass = FunctionsClass(this@NumbersActivity, applicationContext)
@@ -41,34 +41,16 @@ class NumbersActivity : Activity() {
 
         rewardVideo = findViewById(R.id.rewardVideo)
 
-//        val actionBar: ActionBar = this.actionBar
-//        actionBar.title = Html.fromHtml("<font color='#FFFFFF'>" + getString(R.string.app_name) + "</font>")
-//        actionBar.setBackgroundDrawable(ColorDrawable(getColor(R.color.default_color)))
+        mainView = MainView(applicationContext, this@NumbersActivity)
+
+        gamePlayView.addView(mainView)
+
 
         val window = this.window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         window.statusBarColor = getColor(R.color.default_color)
         window.navigationBarColor = getColor(R.color.default_color)
-
-        webGame = findViewById(R.id.webGame)
-        webGame.addJavascriptInterface(WebInterface(this@NumbersActivity, applicationContext), "Android")
-
-        val settings = webGame.settings
-        settings.javaScriptEnabled = true
-        settings.domStorageEnabled = true
-        settings.databaseEnabled = true
-        settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
-        settings.databasePath = filesDir.parentFile.path + "/databases"
-
-        if (savedInstanceState != null) {
-            webGame.restoreState(savedInstanceState)
-        } else {
-            //webGame.loadUrl("file:///android_asset/2048/index.html?lang=" + Locale.getDefault().getLanguage());
-            webGame.loadUrl("file:///android_asset/2048/index.html")
-        }
-
-        webGame.setOnTouchListener { view, motionEvent -> false }
 
         val intentFilter = IntentFilter()
         intentFilter.addAction("ENABLE_REWARDED_VIDEO")
@@ -164,15 +146,13 @@ class NumbersActivity : Activity() {
         PublicVariable.eligibleToLoadShowAds = true
 
         val rewardedPromotionCode = functionsClass.readPreference(".NoAdsRewardedInfo", "RewardedPromotionCode", 0)
-        if ((rewardedPromotionCode >= 33)
-                && functionsClass.readPreference(".NoAdsRewardedInfo", "Requested", false) == true) {
+        if ((rewardedPromotionCode >= 33) && functionsClass.readPreference(".NoAdsRewardedInfo", "Requested", false)) {
 
             rewardVideo.text = Html.fromHtml("<br/><font color='#f2f7ff'>" +
                     "<big>Please Click to See Rewarded Ads to<br/>" +
                     "\uD83D\uDC8E  \uD83D\uDC8E  \uD83D\uDC8E <b>Support Geeks Empire Open Source Projects</b> \uD83D\uDC8E  \uD83D\uDC8E  \uD83D\uDC8E </big><br/>"
                     + "</font>")
-        } else if ((rewardedPromotionCode >= 33)
-                && functionsClass.readPreference(".NoAdsRewardedInfo", "Requested", false) == false) {
+        } else if ((rewardedPromotionCode >= 33) && !functionsClass.readPreference(".NoAdsRewardedInfo", "Requested", false)) {
 
             rewardVideo.setTextColor(getColor(R.color.light))
             rewardVideo.text = Html.fromHtml("<br/><font color='#f2f7ff'>" +
@@ -195,15 +175,104 @@ class NumbersActivity : Activity() {
         PublicVariable.eligibleToLoadShowAds = false
     }
 
-    override protected fun onSaveInstanceState(outState: Bundle?) {
-        webGame.saveState(outState)
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            //Do nothing
+            return true
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+            mainView!!.game.move(2)
+            return true
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+            mainView!!.game.move(0)
+            return true
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+            mainView!!.game.move(3)
+            return true
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            mainView!!.game.move(1)
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
+    public override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+
+        savedInstanceState.putBoolean("hasState", true)
+        save()
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
+    private fun save() {
+        val settings = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = settings.edit()
+        val field = mainView!!.game.grid!!.field
+        val undoField = mainView!!.game.grid!!.undoField
+        editor.putInt(WIDTH, field.size)
+        editor.putInt(HEIGHT, field.size)
+        for (xx in field.indices) {
+            for (yy in 0 until field[0].size) {
+                if (field[xx][yy] != null) {
+                    editor.putInt(xx.toString() + " " + yy, field[xx][yy]!!.value)
+                } else {
+                    editor.putInt(xx.toString() + " " + yy, 0)
+                }
+
+                if (undoField[xx][yy] != null) {
+                    editor.putInt("$UNDO_GRID$xx $yy", undoField[xx][yy]!!.value)
+                } else {
+                    editor.putInt("$UNDO_GRID$xx $yy", 0)
+                }
+            }
+        }
+        editor.putLong(SCORE, mainView!!.game.score)
+        editor.putLong(HIGH_SCORE, mainView!!.game.highScore)
+        editor.putLong(UNDO_SCORE, mainView!!.game.lastScore)
+        editor.putBoolean(CAN_UNDO, mainView!!.game.canUndo)
+        editor.putInt(GAME_STATE, mainView!!.game.gameState)
+        editor.putInt(UNDO_GAME_STATE, mainView!!.game.lastGameState)
+        editor.apply()
+    }
+
+    private fun load() {
+        //Stopping all animations
+        mainView!!.game.aGrid.cancelAnimations()
+
+        val settings = PreferenceManager.getDefaultSharedPreferences(this)
+        for (xx in mainView!!.game.grid!!.field.indices) {
+            for (yy in mainView!!.game.grid!!.field[0].size until mainView!!.game.grid!!.field[0].size) {
+                val value = settings.getInt(xx.toString() + " " + yy, -1)
+                if (value > 0) {
+                    mainView!!.game.grid!!.field[xx][yy] = Tile(xx, yy, value)
+                } else if (value == 0) {
+                    mainView!!.game.grid!!.field[xx][yy] = null
+                }
+
+                val undoValue = settings.getInt("$UNDO_GRID$xx $yy", -1)
+                if (undoValue > 0) {
+                    mainView!!.game.grid!!.undoField[xx][yy] = Tile(xx, yy, undoValue)
+                } else if (value == 0) {
+                    mainView!!.game.grid!!.undoField[xx][yy] = null
+                }
+            }
+        }
+
+        mainView!!.game.score = settings.getLong(SCORE, mainView!!.game.score)
+        mainView!!.game.highScore = settings.getLong(HIGH_SCORE, mainView!!.game.highScore)
+        mainView!!.game.lastScore = settings.getLong(UNDO_SCORE, mainView!!.game.lastScore)
+        mainView!!.game.canUndo = settings.getBoolean(CAN_UNDO, mainView!!.game.canUndo)
+        mainView!!.game.gameState = settings.getInt(GAME_STATE, mainView!!.game.gameState)
+        mainView!!.game.lastGameState = settings.getInt(UNDO_GAME_STATE, mainView!!.game.lastGameState)
+    }
+
+    companion object {
+        private val WIDTH = "width"
+        private val HEIGHT = "height"
+        private val SCORE = "score"
+        private val HIGH_SCORE = "high score temp"
+        private val UNDO_SCORE = "undo score"
+        private val CAN_UNDO = "can undo"
+        private val UNDO_GRID = "undo"
+        private val GAME_STATE = "game state"
+        private val UNDO_GAME_STATE = "undo game state"
     }
 }

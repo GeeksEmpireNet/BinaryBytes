@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Binary Bytes</string>
+
     <string name="high_score">Best</string>
     <string name="score">Score</string>
     <string name="you_win">You Win!</string>

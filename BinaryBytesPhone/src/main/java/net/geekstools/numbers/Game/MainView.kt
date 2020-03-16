@@ -1,4 +1,4 @@
-package net.geekstools.numbers.Util
+package net.geekstools.numbers.Game
 
 import android.app.Activity
 import android.content.Context
@@ -12,11 +12,11 @@ import android.util.Log
 import android.view.View
 import net.geekstools.numbers.R
 
-class MainView(context: Context, var activity: Activity) : View(context) {
-
+class MainView(context: Context, activity: Activity) : View(context) {
     val numCellTypes = 21
     private val bitmapCell = arrayOfNulls<BitmapDrawable>(numCellTypes)
     val game: MainGame
+
     //Internal variables
     private val paint = Paint()
     var hasSaveState = false
@@ -25,21 +25,26 @@ class MainView(context: Context, var activity: Activity) : View(context) {
     var startingY: Int = 0
     var endingX: Int = 0
     var endingY: Int = 0
+
     //Icon variables
     var sYIcons: Int = 0
     var sXNewGame: Int = 0
     var sXUndo: Int = 0
     var iconSize: Int = 0
+
     //Misc
     var refreshLastTime = true
+
     //Timing
     private var lastFPSTime = System.nanoTime()
+
     //Text
     private var titleTextSize: Float = 0.toFloat()
     private var bodyTextSize: Float = 0.toFloat()
     private var headerTextSize: Float = 0.toFloat()
     private var instructionsTextSize: Float = 0.toFloat()
     private var gameOverTextSize: Float = 0.toFloat()
+
     //Layout variables
     private var cellSize = 0
     private var textSize = 0f
@@ -47,6 +52,7 @@ class MainView(context: Context, var activity: Activity) : View(context) {
     private var gridWidth = 0
     private var textPaddingSize: Int = 0
     private var iconPaddingSize: Int = 0
+
     //Assets
     private var backgroundRectangle: Drawable? = null
     private var backgroundRectangleNew: Drawable? = null
@@ -57,6 +63,7 @@ class MainView(context: Context, var activity: Activity) : View(context) {
     private var loseGameOverlay: BitmapDrawable? = null
     private var winGameContinueOverlay: BitmapDrawable? = null
     private var winGameFinalOverlay: BitmapDrawable? = null
+
     //Text variables
     private var sYAll: Int = 0
     private var titleStartYAll: Int = 0
