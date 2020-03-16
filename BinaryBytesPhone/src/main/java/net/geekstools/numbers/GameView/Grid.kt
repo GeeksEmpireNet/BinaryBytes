@@ -1,4 +1,4 @@
-package net.geekstools.numbers.Game
+package net.geekstools.numbers.GameView
 
 class Grid {
 

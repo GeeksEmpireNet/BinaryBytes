@@ -1,4 +1,4 @@
-package net.geekstools.numbers.Util
+package net.geekstools.numbers.GameView
 
 open class Cell {
     var x: Int = 0

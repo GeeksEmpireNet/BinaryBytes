@@ -1,4 +1,4 @@
-package net.geekstools.numbers.Util
+package net.geekstools.numbers.GameView
 
 internal class AnimationCell(x: Int, y: Int, val animationType: Int, private val animationTime: Long, private val delayTime: Long, val extras: IntArray?) : Cell(x, y) {
     private var timeElapsed: Long = 0

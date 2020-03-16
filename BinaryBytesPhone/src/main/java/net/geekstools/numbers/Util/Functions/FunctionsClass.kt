@@ -190,9 +190,9 @@ class FunctionsClass {
         appName.setTypeface(typeFace);
 
         Handler().postDelayed(Runnable {
-            val leftAnim = AnimationUtils.loadAnimation(context, R.anim.ltr)
-            val rightAnim = AnimationUtils.loadAnimation(context, R.anim.rtl)
-            val animScale = AnimationUtils.loadAnimation(context, R.anim.scales)
+            val leftAnim = AnimationUtils.loadAnimation(context, R.anim.left_to_right)
+            val rightAnim = AnimationUtils.loadAnimation(context, R.anim.right_to_left)
+            val animScale = AnimationUtils.loadAnimation(context, R.anim.scales_up_down)
             val slideOut = AnimationUtils.loadAnimation(context, android.R.anim.slide_out_right)
 
             left.startAnimation(leftAnim)

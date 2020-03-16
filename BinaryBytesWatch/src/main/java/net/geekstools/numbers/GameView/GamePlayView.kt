@@ -1,4 +1,4 @@
-package net.geekstools.numbers.Util
+package net.geekstools.numbers.GameView
 
 import android.app.Activity
 import android.content.Context
@@ -12,7 +12,7 @@ import android.util.Log
 import android.view.View
 import net.geekstools.numbers.R
 
-class MainView(context: Context, var activity: Activity) : View(context) {
+class GamePlayView(context: Context, var activity: Activity) : View(context) {
 
     val numCellTypes = 21
     private val bitmapCell = arrayOfNulls<BitmapDrawable>(numCellTypes)
@@ -560,7 +560,7 @@ class MainView(context: Context, var activity: Activity) : View(context) {
 
         //Internal Constants
         val BASE_ANIMATION_TIME = 100000000
-        private val TAG = MainView::class.java.simpleName
+        private val TAG = GamePlayView::class.java.simpleName
         private val MERGING_ACCELERATION = (-0.5).toFloat()
         private val INITIAL_VELOCITY = (1 - MERGING_ACCELERATION) / 4
 

@@ -4,63 +4,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="net.geekstools.numbers.SplashActivity"
-    android:background="@color/light">
+    android:background="@color/default_color">
 
-    <RelativeLayout
-        android:id="@+id/guide"
+    <ImageView
+        android:id="@+id/arrows"
+        android:layout_width="100dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="41dp"
+        android:layout_marginBottom="13dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/arrows" />
+
+    <ImageView
+        android:id="@+id/dots"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="21dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/arrows"
+        android:background="@drawable/dots" />
+
+    <ImageView
+        android:id="@+id/right"
+        android:layout_below="@id/arrows"
+        android:layout_width="59dp"
+        android:layout_height="59dp"
+        android:layout_margin="3dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/tile_two" />
+
+    <ImageView
+        android:id="@+id/left"
+        android:layout_below="@id/arrows"
+        android:layout_width="59dp"
+        android:layout_height="59dp"
+        android:layout_margin="3dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/tile_two" />
+
+    <TextView
+        android:id="@+id/appName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        android:background="@color/default_color">
-
-        <ImageView
-            android:id="@+id/arrows"
-            android:layout_width="100dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="41dp"
-            android:layout_marginBottom="13dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/arrows" />
-
-        <ImageView
-            android:id="@+id/dots"
-            android:layout_width="23dp"
-            android:layout_height="23dp"
-            android:layout_marginTop="21dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/arrows"
-            android:background="@drawable/dots" />
-
-        <ImageView
-            android:id="@+id/right"
-            android:layout_below="@id/arrows"
-            android:layout_width="59dp"
-            android:layout_height="59dp"
-            android:layout_margin="3dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/tile_two" />
-
-        <ImageView
-            android:id="@+id/left"
-            android:layout_below="@id/arrows"
-            android:layout_width="59dp"
-            android:layout_height="59dp"
-            android:layout_margin="3dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/tile_two" />
-
-        <TextView
-            android:id="@+id/appName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="7dp"
-            android:gravity="center"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="13dp"
-            android:fontFamily="sans-serif-condensed"
-            android:text="@string/app_name"
-            android:textSize="41sp"
-            android:textColor="@color/light" />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:padding="7dp"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="13dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="@string/app_name"
+        android:textSize="41sp"
+        android:textColor="@color/light" />
 
 </RelativeLayout>

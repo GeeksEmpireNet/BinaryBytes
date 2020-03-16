@@ -1,80 +1,81 @@
 package net.geekstools.numbers
 
-import android.annotation.SuppressLint
-import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
-import android.os.Handler
-import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.*
+import net.geekstools.numbers.databinding.SplashViewBinding
 
-class SplashActivity : Activity() {
-    @SuppressLint("SetJavaScriptEnabled")
+class SplashActivity : AppCompatActivity() {
+
+    private lateinit var splashViewBinding: SplashViewBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.splash_view)
+        splashViewBinding = SplashViewBinding.inflate(layoutInflater)
+        setContentView(splashViewBinding.root)
 
-        guideScreen()
+        initialGuideScreen()
     }
 
-    private fun guideScreen() {
-        val guide = findViewById<View>(R.id.guide) as RelativeLayout
-        guide.visibility = View.VISIBLE
-        val arrows = findViewById<View>(R.id.arrows) as ImageView
-        val dots = findViewById<View>(R.id.dots) as ImageView
-        val left = findViewById<View>(R.id.left) as ImageView
-        left.background = getDrawable(R.drawable.tile_two)
-        val right = findViewById<View>(R.id.right) as ImageView
-        right.background = getDrawable(R.drawable.tile_two)
-        val appName = findViewById<View>(R.id.appName) as TextView
+    private fun initialGuideScreen() = CoroutineScope(SupervisorJob() + Dispatchers.Main).launch {
+        delay(200)
+
+        splashViewBinding.left.background = getDrawable(R.drawable.tile_two)
+        splashViewBinding.right.background = getDrawable(R.drawable.tile_two)
 
         val face = Typeface.createFromAsset(assets, "upcil.ttf")
-        appName.typeface = face
+        splashViewBinding.appName.typeface = face
 
-        Handler().postDelayed({
-            val leftAnim = AnimationUtils.loadAnimation(applicationContext, R.anim.ltr)
-            val rightAnim = AnimationUtils.loadAnimation(applicationContext, R.anim.rtl)
-            val animScale = AnimationUtils.loadAnimation(applicationContext, R.anim.scales)
-            val slideOut = AnimationUtils.loadAnimation(applicationContext, android.R.anim.slide_out_right)
+        val leftToRightAnimation = AnimationUtils.loadAnimation(applicationContext, R.anim.left_to_right)
+        val rightToLeftAnimation = AnimationUtils.loadAnimation(applicationContext, R.anim.right_to_left)
+        val animationScaleUpDown = AnimationUtils.loadAnimation(applicationContext, R.anim.scales_up_down)
 
-            left.startAnimation(leftAnim)
-            right.startAnimation(rightAnim)
-            leftAnim.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation) {}
+        splashViewBinding.left.startAnimation(leftToRightAnimation)
+        splashViewBinding.right.startAnimation(rightToLeftAnimation)
 
-                override fun onAnimationEnd(animation: Animation) {
-                    left.background = getDrawable(R.drawable.tile_four)
-                    left.startAnimation(animScale)
-                    animScale.setAnimationListener(object : Animation.AnimationListener {
-                        override fun onAnimationStart(animation: Animation) {}
+        leftToRightAnimation.setAnimationListener(object : Animation.AnimationListener {
 
-                        override fun onAnimationEnd(animation: Animation) {
-                            Handler().postDelayed({
-                                guide.startAnimation(slideOut)
-                                slideOut.setAnimationListener(object : Animation.AnimationListener {
-                                    override fun onAnimationStart(animation: Animation) {
-                                        startActivity(Intent(applicationContext, NumbersActivity::class.java))
-                                        this@SplashActivity.finish()
-                                    }
+            override fun onAnimationStart(animation: Animation) {
 
-                                    override fun onAnimationEnd(animation: Animation) {}
+            }
 
-                                    override fun onAnimationRepeat(animation: Animation) {}
-                                })
-                            }, 250)
+            override fun onAnimationEnd(animation: Animation) {
+
+                splashViewBinding.left.background = getDrawable(R.drawable.tile_four)
+                splashViewBinding.left.startAnimation(animationScaleUpDown)
+                animationScaleUpDown.setAnimationListener(object : Animation.AnimationListener {
+
+                    override fun onAnimationStart(animation: Animation) {
+
+                    }
+
+                    override fun onAnimationEnd(animation: Animation) {
+
+                        CoroutineScope(Dispatchers.Main).launch {
+                            delay(500)
+
+                            startActivity(Intent(applicationContext, NumbersActivity::class.java).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }, ActivityOptions.makeCustomAnimation(applicationContext, R.anim.right_to_left, 0).toBundle())
+
+                            this@SplashActivity.finish()
                         }
+                    }
 
-                        override fun onAnimationRepeat(animation: Animation) {}
-                    })
-                }
+                    override fun onAnimationRepeat(animation: Animation) {
 
-                override fun onAnimationRepeat(animation: Animation) {}
-            })
-        }, 170)
+                    }
+                })
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {
+
+            }
+        })
     }
 }

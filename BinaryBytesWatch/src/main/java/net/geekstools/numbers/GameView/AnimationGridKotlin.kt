@@ -1,9 +1,8 @@
-package net.geekstools.numbers.Game
+package net.geekstools.numbers.GameView
 
 class AnimationGridKotlin {
 
     internal var globalAnimation = ArrayList<AnimationCell>()
-
     //    private var field: Array<Array<AnimationCell>>
     private var field: Array<Array<ArrayList<AnimationCell>>>
 

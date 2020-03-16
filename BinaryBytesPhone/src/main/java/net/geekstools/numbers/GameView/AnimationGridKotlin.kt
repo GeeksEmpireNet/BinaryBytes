@@ -1,8 +1,9 @@
-package net.geekstools.numbers.Util
+package net.geekstools.numbers.GameView
 
-class AnimationGrid {
+class AnimationGridKotlin {
 
     internal var globalAnimation = ArrayList<AnimationCell>()
+
     //    private var field: Array<Array<AnimationCell>>
     private var field: Array<Array<ArrayList<AnimationCell>>>
 
@@ -28,7 +29,7 @@ class AnimationGrid {
         }
     }
 
-    fun startAnimation(x: Int, y: Int, animationType: Int, length: Long, delay: Long, extras: IntArray?) {
+    fun startAnimation(x: Int, y: Int, animationType: Int, length: Long, delay: Long, extras: IntArray) {
         val animationToAdd = AnimationCell(x, y, animationType, length, delay, extras)
 
         if (x == -1 && y == -1) {

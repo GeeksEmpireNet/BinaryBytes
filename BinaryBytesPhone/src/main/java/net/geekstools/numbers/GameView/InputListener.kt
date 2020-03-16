@@ -1,11 +1,11 @@
-package net.geekstools.numbers.Game
+package net.geekstools.numbers.GameView
 
 import android.app.Activity
 import android.app.AlertDialog
 import android.view.MotionEvent
 import android.view.View
 
-internal class InputListener(private val mView: MainView, var activity: Activity) : View.OnTouchListener {
+internal class InputListener(private val mView: GamePlayView, var activity: Activity) : View.OnTouchListener {
     private var x: Float = 0.toFloat()
     private var y: Float = 0.toFloat()
     private var lastDx: Float = 0.toFloat()

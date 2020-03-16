@@ -15,9 +15,8 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import kotlinx.android.synthetic.main.game_activity.*
-import net.geekstools.numbers.Game.MainView
-import net.geekstools.numbers.Game.Tile
+import net.geekstools.numbers.GameView.GamePlayView
+import net.geekstools.numbers.GameView.Tile
 import net.geekstools.numbers.Util.Functions.FunctionsClass
 import net.geekstools.numbers.Util.Functions.PublicVariable
 
@@ -25,7 +24,7 @@ class NumbersActivity : AppCompatActivity() {
 
     lateinit var functionsClass: FunctionsClass
 
-    private var mainView: MainView? = null
+    private var gamePlayView: GamePlayView? = null
     lateinit var rewardVideo: Button
 
     lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
@@ -41,9 +40,9 @@ class NumbersActivity : AppCompatActivity() {
 
         rewardVideo = findViewById(R.id.rewardVideo)
 
-        mainView = MainView(applicationContext, this@NumbersActivity)
+        gamePlayView = GamePlayView(applicationContext, this@NumbersActivity)
 
-        gamePlayView.addView(mainView)
+        gamePlayView.addView(gamePlayView)
 
 
         val window = this.window
@@ -180,16 +179,16 @@ class NumbersActivity : AppCompatActivity() {
             //Do nothing
             return true
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-            mainView!!.game.move(2)
+            gamePlayView!!.game.move(2)
             return true
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-            mainView!!.game.move(0)
+            gamePlayView!!.game.move(0)
             return true
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-            mainView!!.game.move(3)
+            gamePlayView!!.game.move(3)
             return true
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            mainView!!.game.move(1)
+            gamePlayView!!.game.move(1)
             return true
         }
         return super.onKeyDown(keyCode, event)
@@ -205,8 +204,8 @@ class NumbersActivity : AppCompatActivity() {
     private fun save() {
         val settings = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = settings.edit()
-        val field = mainView!!.game.grid!!.field
-        val undoField = mainView!!.game.grid!!.undoField
+        val field = gamePlayView!!.game.grid!!.field
+        val undoField = gamePlayView!!.game.grid!!.undoField
         editor.putInt(WIDTH, field.size)
         editor.putInt(HEIGHT, field.size)
         for (xx in field.indices) {
@@ -224,44 +223,44 @@ class NumbersActivity : AppCompatActivity() {
                 }
             }
         }
-        editor.putLong(SCORE, mainView!!.game.score)
-        editor.putLong(HIGH_SCORE, mainView!!.game.highScore)
-        editor.putLong(UNDO_SCORE, mainView!!.game.lastScore)
-        editor.putBoolean(CAN_UNDO, mainView!!.game.canUndo)
-        editor.putInt(GAME_STATE, mainView!!.game.gameState)
-        editor.putInt(UNDO_GAME_STATE, mainView!!.game.lastGameState)
+        editor.putLong(SCORE, gamePlayView!!.game.score)
+        editor.putLong(HIGH_SCORE, gamePlayView!!.game.highScore)
+        editor.putLong(UNDO_SCORE, gamePlayView!!.game.lastScore)
+        editor.putBoolean(CAN_UNDO, gamePlayView!!.game.canUndo)
+        editor.putInt(GAME_STATE, gamePlayView!!.game.gameState)
+        editor.putInt(UNDO_GAME_STATE, gamePlayView!!.game.lastGameState)
         editor.apply()
     }
 
     private fun load() {
         //Stopping all animations
-        mainView!!.game.aGrid.cancelAnimations()
+        gamePlayView!!.game.aGrid.cancelAnimations()
 
         val settings = PreferenceManager.getDefaultSharedPreferences(this)
-        for (xx in mainView!!.game.grid!!.field.indices) {
-            for (yy in mainView!!.game.grid!!.field[0].size until mainView!!.game.grid!!.field[0].size) {
+        for (xx in gamePlayView!!.game.grid!!.field.indices) {
+            for (yy in gamePlayView!!.game.grid!!.field[0].size until gamePlayView!!.game.grid!!.field[0].size) {
                 val value = settings.getInt(xx.toString() + " " + yy, -1)
                 if (value > 0) {
-                    mainView!!.game.grid!!.field[xx][yy] = Tile(xx, yy, value)
+                    gamePlayView!!.game.grid!!.field[xx][yy] = Tile(xx, yy, value)
                 } else if (value == 0) {
-                    mainView!!.game.grid!!.field[xx][yy] = null
+                    gamePlayView!!.game.grid!!.field[xx][yy] = null
                 }
 
                 val undoValue = settings.getInt("$UNDO_GRID$xx $yy", -1)
                 if (undoValue > 0) {
-                    mainView!!.game.grid!!.undoField[xx][yy] = Tile(xx, yy, undoValue)
+                    gamePlayView!!.game.grid!!.undoField[xx][yy] = Tile(xx, yy, undoValue)
                 } else if (value == 0) {
-                    mainView!!.game.grid!!.undoField[xx][yy] = null
+                    gamePlayView!!.game.grid!!.undoField[xx][yy] = null
                 }
             }
         }
 
-        mainView!!.game.score = settings.getLong(SCORE, mainView!!.game.score)
-        mainView!!.game.highScore = settings.getLong(HIGH_SCORE, mainView!!.game.highScore)
-        mainView!!.game.lastScore = settings.getLong(UNDO_SCORE, mainView!!.game.lastScore)
-        mainView!!.game.canUndo = settings.getBoolean(CAN_UNDO, mainView!!.game.canUndo)
-        mainView!!.game.gameState = settings.getInt(GAME_STATE, mainView!!.game.gameState)
-        mainView!!.game.lastGameState = settings.getInt(UNDO_GAME_STATE, mainView!!.game.lastGameState)
+        gamePlayView!!.game.score = settings.getLong(SCORE, gamePlayView!!.game.score)
+        gamePlayView!!.game.highScore = settings.getLong(HIGH_SCORE, gamePlayView!!.game.highScore)
+        gamePlayView!!.game.lastScore = settings.getLong(UNDO_SCORE, gamePlayView!!.game.lastScore)
+        gamePlayView!!.game.canUndo = settings.getBoolean(CAN_UNDO, gamePlayView!!.game.canUndo)
+        gamePlayView!!.game.gameState = settings.getInt(GAME_STATE, gamePlayView!!.game.gameState)
+        gamePlayView!!.game.lastGameState = settings.getInt(UNDO_GAME_STATE, gamePlayView!!.game.lastGameState)
     }
 
     companion object {

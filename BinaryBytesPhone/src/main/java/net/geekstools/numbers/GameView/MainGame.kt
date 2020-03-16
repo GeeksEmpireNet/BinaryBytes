@@ -1,10 +1,10 @@
-package net.geekstools.numbers.Game
+package net.geekstools.numbers.GameView
 
 import android.content.Context
 import android.preference.PreferenceManager
 import java.util.*
 
-class MainGame(private val mContext: Context, private val mView: MainView) {
+class MainGame(private val mContext: Context, private val mView: GamePlayView) {
 
     var gameState = GAME_NORMAL
     var lastGameState = GAME_NORMAL
@@ -326,10 +326,10 @@ class MainGame(private val mContext: Context, private val mView: MainView) {
         val MERGE_ANIMATION = 1
 
         val FADE_GLOBAL_ANIMATION = 0
-        private val MOVE_ANIMATION_TIME = MainView.BASE_ANIMATION_TIME.toLong()
-        private val SPAWN_ANIMATION_TIME = MainView.BASE_ANIMATION_TIME.toLong()
+        private val MOVE_ANIMATION_TIME = GamePlayView.BASE_ANIMATION_TIME.toLong()
+        private val SPAWN_ANIMATION_TIME = GamePlayView.BASE_ANIMATION_TIME.toLong()
         private val NOTIFICATION_DELAY_TIME = MOVE_ANIMATION_TIME + SPAWN_ANIMATION_TIME
-        private val NOTIFICATION_ANIMATION_TIME = (MainView.BASE_ANIMATION_TIME * 5).toLong()
+        private val NOTIFICATION_ANIMATION_TIME = (GamePlayView.BASE_ANIMATION_TIME * 5).toLong()
         private val startingMaxValue = 2048
 
         //Odd state = game is not active
