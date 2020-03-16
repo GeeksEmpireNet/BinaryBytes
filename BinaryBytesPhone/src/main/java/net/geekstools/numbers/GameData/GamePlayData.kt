@@ -7,7 +7,7 @@ import net.geekstools.numbers.GameView.Tile
 
 class GamePlayData (private var context: Context, private var gamePlayView: GamePlayView) {
 
-    private fun save() {
+    fun save() {
         val settings = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = settings.edit()
         val field = gamePlayView.game.grid.field
@@ -38,7 +38,7 @@ class GamePlayData (private var context: Context, private var gamePlayView: Game
         editor.apply()
     }
 
-    private fun load() {
+    fun load() {
         //Stopping all animations
         gamePlayView.game.aGrid.cancelAnimations()
 

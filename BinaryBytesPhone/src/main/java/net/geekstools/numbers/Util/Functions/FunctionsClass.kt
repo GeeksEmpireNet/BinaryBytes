@@ -1,6 +1,9 @@
 package net.geekstools.numbers.Util.Functions
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,16 +13,11 @@ import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
-import android.preference.PreferenceManager
 import android.telephony.TelephonyManager
 import android.text.Html
-import android.util.TypedValue
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
@@ -28,24 +26,13 @@ import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import net.geekstools.numbers.BuildConfig
 import net.geekstools.numbers.R
+import net.geekstools.numbers.databinding.GameActivityBinding
 import java.io.FileOutputStream
 
 
-class FunctionsClass {
-
-    lateinit var activity: Activity
-    lateinit var context: Context
-
-    var API: Int
+class FunctionsClass (private var context: Context) {
 
     init {
-        API = Build.VERSION.SDK_INT
-    }
-
-    constructor(activityInit: Activity, contextInit: Context) {
-        this.activity = activityInit;
-        this.context = contextInit
-
         MobileAds.initialize(context, context.getString(R.string.ad_app_id))
         val rewardedVideoAdInstance = MobileAds.getRewardedVideoAdInstance(context)
         rewardedVideoAdInstance.setImmersiveMode(true)
@@ -172,54 +159,49 @@ class FunctionsClass {
     }
 
     /*Guide*/
-    public fun guideScreen(activity: Activity, forceShow: Boolean) {
-        val guide: RelativeLayout = activity.findViewById(R.id.guide) as RelativeLayout
+    fun guideScreen(gameActivityBinding: GameActivityBinding, forceShow: Boolean) {
         if (forceShow) {
-            guide.startAnimation(AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left))
+            gameActivityBinding.guide.startAnimation(AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left))
         }
-        guide.visibility = View.VISIBLE
-        val arrows: ImageView = activity.findViewById(R.id.arrows) as ImageView
-        val dots: ImageView = activity.findViewById(R.id.dots) as ImageView
-        val left: ImageView = activity.findViewById(R.id.left) as ImageView
-        left.background = context.getDrawable(R.drawable.tile_two)
-        val right: ImageView = activity.findViewById(R.id.right) as ImageView
-        right.background = context.getDrawable(R.drawable.tile_two)
-        val appName: TextView = activity.findViewById(R.id.appName) as TextView
+        gameActivityBinding.guide.visibility = View.VISIBLE
+        gameActivityBinding.left.background = context.getDrawable(R.drawable.tile_two)
+        gameActivityBinding.right.background = context.getDrawable(R.drawable.tile_two)
 
-        val typeFace: Typeface = Typeface.createFromAsset(context.getAssets(), "upcil.ttf")
-        appName.setTypeface(typeFace);
+        val typeFace: Typeface = Typeface.createFromAsset(context.assets, "upcil.ttf")
+        gameActivityBinding.appName.typeface = typeFace
 
-        Handler().postDelayed(Runnable {
-            val leftAnim = AnimationUtils.loadAnimation(context, R.anim.left_to_right)
-            val rightAnim = AnimationUtils.loadAnimation(context, R.anim.right_to_left)
-            val animScale = AnimationUtils.loadAnimation(context, R.anim.scales_up_down)
+        Handler().postDelayed({
+            val leftToRightAnimation = AnimationUtils.loadAnimation(context, R.anim.left_to_right)
+            val rightToLeftAnimation = AnimationUtils.loadAnimation(context, R.anim.right_to_left)
+            val animationScaleUpDown = AnimationUtils.loadAnimation(context, R.anim.scales_up_down)
+
             val slideOut = AnimationUtils.loadAnimation(context, android.R.anim.slide_out_right)
 
-            left.startAnimation(leftAnim)
-            right.startAnimation(rightAnim)
-            leftAnim.setAnimationListener(object : Animation.AnimationListener {
+            gameActivityBinding.left.startAnimation(leftToRightAnimation)
+            gameActivityBinding.right.startAnimation(rightToLeftAnimation)
+            leftToRightAnimation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {
 
                 }
 
                 override fun onAnimationEnd(animation: Animation) {
-                    left.background = context.getDrawable(R.drawable.tile_four)
-                    left.startAnimation(animScale)
-                    animScale.setAnimationListener(object : Animation.AnimationListener {
+                    gameActivityBinding.left.background = context.getDrawable(R.drawable.tile_four)
+                    gameActivityBinding.left.startAnimation(animationScaleUpDown)
+                    animationScaleUpDown.setAnimationListener(object : Animation.AnimationListener {
                         override fun onAnimationStart(animation: Animation) {
 
                         }
 
                         override fun onAnimationEnd(animation: Animation) {
                             Handler().postDelayed({
-                                guide.startAnimation(slideOut)
+                                gameActivityBinding.guide.startAnimation(slideOut)
                                 slideOut.setAnimationListener(object : Animation.AnimationListener {
                                     override fun onAnimationStart(animation: Animation) {
 
                                     }
 
                                     override fun onAnimationEnd(animation: Animation) {
-                                        guide.visibility = View.INVISIBLE
+                                        gameActivityBinding.guide.visibility = View.INVISIBLE
                                     }
 
                                     override fun onAnimationRepeat(animation: Animation) {
@@ -239,25 +221,21 @@ class FunctionsClass {
 
                 }
             })
-        }, if (forceShow) {
-            230
-        } else {
-            170
-        })
+        }, 230)
     }
 
     /*System Checkpoint*/
-    public fun getDeviceName(): String {
+    fun getDeviceName(): String {
         val manufacturer: String = Build.MANUFACTURER
         val model: String = Build.MODEL
         return if (model.startsWith(manufacturer)) {
-            capitalize(model)
+            capitalizeFirstChar(model)
         } else {
-            capitalize(manufacturer) + " " + model
+            capitalizeFirstChar(manufacturer) + " " + model
         }
     }
 
-    private fun capitalize(someText: String?): String {
+    private fun capitalizeFirstChar(someText: String?): String {
         if (someText == null || someText.length == 0) {
             return ""
         }
@@ -269,7 +247,7 @@ class FunctionsClass {
         }
     }
 
-    public fun getCountryIso(): String {
+    fun getCountryIso(): String {
         var countryISO = "Undefined"
         try {
             val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -281,32 +259,14 @@ class FunctionsClass {
         return countryISO
     }
 
-    public fun returnAPI(): Int {
-        return API
+    fun appVersionName(pack: String): String {
+
+        return BuildConfig.VERSION_NAME
     }
 
-    public fun appVersionName(pack: String): String {
-        var Version = "0"
+    fun appVersionCode(packageName: String): Int {
 
-        try {
-            val packInfo = context.packageManager.getPackageInfo(pack, 0)
-            Version = packInfo.versionName
-        } catch (e: Exception) {
-        }
-
-        return Version
-    }
-
-    public fun appVersionCode(packageName: String): Int {
-        var VersionCode = 0
-        try {
-            val packInfo = context.packageManager.getPackageInfo(packageName, 0)
-            VersionCode = packInfo.versionCode
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return VersionCode
+        return BuildConfig.VERSION_CODE
     }
 
     /*Files*/
@@ -320,13 +280,6 @@ class FunctionsClass {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
-
-    fun savePreference(PreferenceName: String, KEY: String, VALUE: String?) {
-        val sharedPreferences = context.getSharedPreferences(PreferenceName, Context.MODE_PRIVATE)
-        val editorSharedPreferences = sharedPreferences.edit()
-        editorSharedPreferences.putString(KEY, VALUE)
-        editorSharedPreferences.apply()
     }
 
     fun savePreference(PreferenceName: String, KEY: String, VALUE: Int) {
@@ -350,48 +303,16 @@ class FunctionsClass {
         editorSharedPreferences.apply()
     }
 
-    fun saveDefaultPreference(KEY: String, VALUE: Int) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val editorSharedPreferences = sharedPreferences.edit()
-        editorSharedPreferences.putInt(KEY, VALUE)
-        editorSharedPreferences.apply()
-    }
-
-    fun readPreference(PreferenceName: String, KEY: String, defaultVALUE: String?): String? {
-        return context.getSharedPreferences(PreferenceName, Context.MODE_PRIVATE).getString(KEY, defaultVALUE)
-    }
-
     fun readPreference(PreferenceName: String, KEY: String, defaultVALUE: Int): Int {
         return context.getSharedPreferences(PreferenceName, Context.MODE_PRIVATE).getInt(KEY, defaultVALUE)
-    }
-
-    fun readPreference(PreferenceName: String, KEY: String, defaultVALUE: Long): Long {
-        return context.getSharedPreferences(PreferenceName, Context.MODE_PRIVATE).getLong(KEY, defaultVALUE)
     }
 
     fun readPreference(PreferenceName: String, KEY: String, defaultVALUE: Boolean): Boolean {
         return context.getSharedPreferences(PreferenceName, Context.MODE_PRIVATE).getBoolean(KEY, defaultVALUE)
     }
 
-    fun readDefaultPreference(KEY: String, defaultVALUE: Int): Int {
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(KEY, defaultVALUE)
-    }
-
-    fun readDefaultPreference(KEY: String, defaultVALUE: String): String? {
-        return PreferenceManager.getDefaultSharedPreferences(context).getString(KEY, defaultVALUE)
-    }
-
-    fun readDefaultPreference(KEY: String, defaultVALUE: Boolean): Boolean {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(KEY, defaultVALUE)
-    }
-
-    /*GUI Functions*/
-    fun DpToInteger(dp: Int): Int {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), context.resources.displayMetrics).toInt()
-    }
-
     /*Notification*/
-    public fun notificationCreator(titleText: String, contentText: String, notificationId: Int) {
+    fun notificationCreator(titleText: String, contentText: String, notificationId: Int) {
         try {
             val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val notificationBuilder: Notification.Builder = Notification.Builder(context)
