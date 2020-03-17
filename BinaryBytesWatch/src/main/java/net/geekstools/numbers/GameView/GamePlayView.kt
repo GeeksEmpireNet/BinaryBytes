@@ -565,7 +565,7 @@ class GamePlayView(context: Context, var activity: Activity) : View(context) {
         private val INITIAL_VELOCITY = (1 - MERGING_ACCELERATION) / 4
 
         private fun log2(n: Int): Int {
-            if (n <= 0) throw IllegalArgumentException()
+
             return 31 - Integer.numberOfLeadingZeros(n)
         }
     }

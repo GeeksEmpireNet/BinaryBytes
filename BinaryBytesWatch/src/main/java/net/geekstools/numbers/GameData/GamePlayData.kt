@@ -18,7 +18,7 @@ class GamePlayData (private var context: Context, private var gamePlayView: Game
         private val GAME_STATE = "game state"
         private val UNDO_GAME_STATE = "undo game state"
     }
-    
+
     fun save() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = sharedPreferences.edit()
@@ -45,7 +45,6 @@ class GamePlayData (private var context: Context, private var gamePlayView: Game
         editor.putLong(SCORE, gamePlayView.gameLogic.score)
         editor.putLong(HIGH_SCORE, gamePlayView.gameLogic.highScore)
         editor.putLong(UNDO_SCORE, gamePlayView.gameLogic.lastScore)
-        editor.putBoolean(CAN_UNDO, gamePlayView.gameLogic.canUndo)
         editor.putInt(GAME_STATE, gamePlayView.gameLogic.gameState)
         editor.putInt(UNDO_GAME_STATE, gamePlayView.gameLogic.lastGameState)
         editor.apply()
@@ -80,7 +79,6 @@ class GamePlayData (private var context: Context, private var gamePlayView: Game
         gamePlayView.gameLogic.score = sharedPreferences.getLong(SCORE, gamePlayView.gameLogic.score)
         gamePlayView.gameLogic.highScore = sharedPreferences.getLong(HIGH_SCORE, gamePlayView.gameLogic.highScore)
         gamePlayView.gameLogic.lastScore = sharedPreferences.getLong(UNDO_SCORE, gamePlayView.gameLogic.lastScore)
-        gamePlayView.gameLogic.canUndo = sharedPreferences.getBoolean(CAN_UNDO, gamePlayView.gameLogic.canUndo)
         gamePlayView.gameLogic.gameState = sharedPreferences.getInt(GAME_STATE, gamePlayView.gameLogic.gameState)
         gamePlayView.gameLogic.lastGameState = sharedPreferences.getInt(UNDO_GAME_STATE, gamePlayView.gameLogic.lastGameState)
     }

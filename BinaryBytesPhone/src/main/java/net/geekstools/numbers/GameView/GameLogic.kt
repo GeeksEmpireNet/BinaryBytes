@@ -35,8 +35,6 @@ class GameLogic(private val context: Context, private val gamePlayView: GamePlay
         if (grid == null) {
             grid = Grid(numSquaresX, numSquaresY)
         } else {
-            prepareUndoState()
-            saveUndoState()
             grid.clearGrid()
         }
         aGrid = AnimationGrid(numSquaresX, numSquaresY)

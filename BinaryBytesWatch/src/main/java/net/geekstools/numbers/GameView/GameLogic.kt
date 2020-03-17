@@ -31,8 +31,6 @@ class GameLogic(private val mContext: Context, private val mView: GamePlayView) 
         if (grid == null) {
             grid = Grid(numSquaresX, numSquaresY)
         } else {
-            prepareUndoState()
-            saveUndoState()
             grid.clearGrid()
         }
         aGrid = AnimationGrid(numSquaresX, numSquaresY)
@@ -113,6 +111,7 @@ class GameLogic(private val mContext: Context, private val mView: GamePlayView) 
 
     fun revertUndoState() {
         if (canUndo) {
+            println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             canUndo = false
             aGrid.cancelAnimations()
             grid.revertTiles()
