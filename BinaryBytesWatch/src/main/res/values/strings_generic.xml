@@ -1,9 +1,9 @@
 <resources>
 
-    <string name="integerVersionCodeNewUpdatePhone" translatable="false">wear_integer_version_code_new_update_phone</string>
-    <string name="stringVersionNameNewUpdatePhone" translatable="false">wear_string_version_name_new_update_phone</string>
-    <string name="stringUpcomingChangeLogPhone" translatable="false">wear_string_upcoming_change_log_phone</string>
-    <string name="stringUpcomingChangeLogSummaryPhone" translatable="false">wear_string_upcoming_change_log_summary_phone</string>
+    <string name="integerVersionCodeNewUpdatePhone" translatable="false">watch_integer_version_code_new_update</string>
+    <string name="stringVersionNameNewUpdatePhone" translatable="false">watch_string_version_name_new_update</string>
+    <string name="stringUpcomingChangeLogPhone" translatable="false">watch_string_upcoming_change_log</string>
+    <string name="stringUpcomingChangeLogSummaryPhone" translatable="false">watch_string_upcoming_change_log_summary</string>
 
     <string name="booleanPlayStoreLink" translatable="false">boolean_play_store_link</string>
     <string name="stringPlayStoreLink" translatable="false">string_play_store_link</string>

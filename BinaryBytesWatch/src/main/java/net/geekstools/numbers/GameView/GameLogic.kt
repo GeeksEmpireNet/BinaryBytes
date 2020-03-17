@@ -111,7 +111,6 @@ class GameLogic(private val mContext: Context, private val mView: GamePlayView) 
 
     fun revertUndoState() {
         if (canUndo) {
-            println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             canUndo = false
             aGrid.cancelAnimations()
             grid.revertTiles()

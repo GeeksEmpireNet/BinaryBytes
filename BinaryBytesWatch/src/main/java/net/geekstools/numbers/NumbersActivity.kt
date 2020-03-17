@@ -84,7 +84,6 @@ class NumbersActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackP
         }
 
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-        firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_default)
         firebaseRemoteConfig.fetch(0)
                 .addOnCompleteListener(this@NumbersActivity) { task ->
 

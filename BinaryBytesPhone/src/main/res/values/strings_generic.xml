@@ -28,10 +28,10 @@
     <string name="link_facebook" translatable="false">https://www.facebook.com/GeeksEmpire</string>
     <string name="link_osp" translatable="false">https://geeksempirenet.github.io/</string>
 
-    <string name="integerVersionCodeNewUpdatePhone" translatable="false">integer_version_code_new_update_phone</string>
-    <string name="stringVersionNameNewUpdatePhone" translatable="false">string_version_name_new_update_phone</string>
-    <string name="stringUpcomingChangeLogPhone" translatable="false">string_upcoming_change_log_phone</string>
-    <string name="stringUpcomingChangeLogSummaryPhone" translatable="false">string_upcoming_change_log_summary_phone</string>
+    <string name="integerVersionCodeNewUpdatePhone" translatable="false">phone_integer_version_code_new_update</string>
+    <string name="stringVersionNameNewUpdatePhone" translatable="false">phone_string_version_name_new_update</string>
+    <string name="stringUpcomingChangeLogPhone" translatable="false">phone_string_upcoming_change_log</string>
+    <string name="stringUpcomingChangeLogSummaryPhone" translatable="false">phone_string_upcoming_change_log_summary</string>
 
     <string name="AdAppId" translatable="false">ca-app-pub-2920235108594210~1473436107</string>
     <string name="adUnitReward" translatable="false">ca-app-pub-2920235108594210/9111596436</string>
