@@ -28,7 +28,7 @@ class GamePlayData (private var context: Context, private var gamePlayView: Game
         editor.putInt(WIDTH, field.size)
         editor.putInt(HEIGHT, field.size)
         for (xx in field.indices) {
-            for (yy in 0 until field[0].size) {
+            for (yy in field[0].indices) {
                 if (field[xx][yy] != null) {
                     editor.putInt("$xx-$yy", field[xx][yy]?.value!!)
                 } else {
@@ -59,7 +59,7 @@ class GamePlayData (private var context: Context, private var gamePlayView: Game
 
         for (xx in gamePlayView.gameLogic.grid.field.indices) {
 
-            for (yy in gamePlayView.gameLogic.grid.field[0].size until gamePlayView.gameLogic.grid.field[0].size) {
+            for (yy in gamePlayView.gameLogic.grid.field[0].indices) {
 
                 val value = sharedPreferences.getInt("$xx-$yy", -1)
                 if (value > 0) {

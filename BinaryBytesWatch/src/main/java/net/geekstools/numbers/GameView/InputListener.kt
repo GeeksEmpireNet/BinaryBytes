@@ -37,7 +37,7 @@ internal class InputListener(private val mView: GamePlayView, var activity: Acti
             MotionEvent.ACTION_MOVE -> {
                 x = event.x
                 y = event.y
-                if (mView.game.isActive) {
+                if (mView.gameLogic.isActive) {
                     val dx = x - previousX
                     if (Math.abs(lastDx + dx) < Math.abs(lastDx) + Math.abs(dx) && Math.abs(dx) > RESET_STARTING
                             && Math.abs(x - startingX) > SWIPE_MIN_DISTANCE) {
@@ -67,24 +67,24 @@ internal class InputListener(private val mView: GamePlayView, var activity: Acti
                             moved = true
                             previousDirection = previousDirection * 2
                             veryLastDirection = 2
-                            mView.game.move(2)
+                            mView.gameLogic.move(2)
                         } else if ((dy <= -SWIPE_THRESHOLD_VELOCITY && Math.abs(dy) >= Math.abs(dx) || y - startingY <= -MOVE_THRESHOLD) && previousDirection % 3 != 0) {
                             moved = true
                             previousDirection = previousDirection * 3
                             veryLastDirection = 3
-                            mView.game.move(0)
+                            mView.gameLogic.move(0)
                         }
                         //Horizontal
                         if ((dx >= SWIPE_THRESHOLD_VELOCITY && Math.abs(dx) >= Math.abs(dy) || x - startingX >= MOVE_THRESHOLD) && previousDirection % 5 != 0) {
                             moved = true
                             previousDirection = previousDirection * 5
                             veryLastDirection = 5
-                            mView.game.move(1)
+                            mView.gameLogic.move(1)
                         } else if ((dx <= -SWIPE_THRESHOLD_VELOCITY && Math.abs(dx) >= Math.abs(dy) || x - startingX <= -MOVE_THRESHOLD) && previousDirection % 7 != 0) {
                             moved = true
                             previousDirection = previousDirection * 7
                             veryLastDirection = 7
-                            mView.game.move(3)
+                            mView.gameLogic.move(3)
                         }
                         if (moved) {
                             hasMoved = true
@@ -105,17 +105,17 @@ internal class InputListener(private val mView: GamePlayView, var activity: Acti
                 //"Menu" inputs
                 if (!hasMoved) {
                     if (iconPressedNew(mView.sXNewGame - mView.iconSize * 3, mView.sYIcons)) {
-                        if (!mView.game.gameLost()) {
+                        if (!mView.gameLogic.gameLost()) {
                             AlertDialog.Builder(activity)
-                                    .setPositiveButton(R.string.reset) { dialog, which -> mView.game.newGame() }
+                                    .setPositiveButton(R.string.reset) { dialog, which -> mView.gameLogic.newGame() }
                                     .setNegativeButton(R.string.continue_game, null)
                                     .setMessage(R.string.reset_dialog_message)
                                     .show()
                         } else {
-                            mView.game.newGame()
+                            mView.gameLogic.newGame()
                         }
                     } else if (iconPressedUndo(mView.sXUndo, mView.sYIcons)) {
-                        mView.game.revertUndoState()
+                        mView.gameLogic.revertUndoState()
                         /*try {
                             throw new RuntimeException("Original Exception");
                         } catch (RuntimeException e) {
@@ -123,7 +123,7 @@ internal class InputListener(private val mView: GamePlayView, var activity: Acti
                         }*/
                     } else if (isTap(2) && inRange(mView.startingX.toFloat(), x, mView.endingX.toFloat())
                             && inRange(mView.startingY.toFloat(), x, mView.endingY.toFloat()) && mView.continueButtonEnabled) {
-                        mView.game.setEndlessMode()
+                        mView.gameLogic.setEndlessMode()
                     }
                 }
             }

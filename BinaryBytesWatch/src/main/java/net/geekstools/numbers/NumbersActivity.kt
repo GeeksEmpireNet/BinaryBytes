@@ -135,16 +135,16 @@ class NumbersActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackP
             //Do nothing
             return true
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-            gamePlayView.game.move(2)
+            gamePlayView.gameLogic.move(2)
             return true
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-            gamePlayView.game.move(0)
+            gamePlayView.gameLogic.move(0)
             return true
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-            gamePlayView.game.move(3)
+            gamePlayView.gameLogic.move(3)
             return true
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            gamePlayView.game.move(1)
+            gamePlayView.gameLogic.move(1)
             return true
         }
         return super.onKeyDown(keyCode, event)

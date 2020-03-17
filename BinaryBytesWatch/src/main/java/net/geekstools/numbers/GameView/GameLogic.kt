@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.preference.PreferenceManager
 import java.util.*
 
-class MainGame(private val mContext: Context, private val mView: GamePlayView) {
+class GameLogic(private val mContext: Context, private val mView: GamePlayView) {
     var gameState = GAME_NORMAL
     var lastGameState = GAME_NORMAL
     private var bufferGameState = GAME_NORMAL
