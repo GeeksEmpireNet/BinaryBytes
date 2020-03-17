@@ -4,8 +4,9 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.view.MotionEvent
 import android.view.View
+import net.geekstools.numbers.R
 
-internal class InputListener(private val mView: GamePlayView, var activity: Activity) : View.OnTouchListener {
+internal class InputListener(private val gamePlayView: GamePlayView, var activity: Activity) : View.OnTouchListener {
     private var x: Float = 0.toFloat()
     private var y: Float = 0.toFloat()
     private var lastDx: Float = 0.toFloat()
@@ -36,7 +37,7 @@ internal class InputListener(private val mView: GamePlayView, var activity: Acti
             MotionEvent.ACTION_MOVE -> {
                 x = event.x
                 y = event.y
-                if (mView.game.isActive) {
+                if (gamePlayView.gameLogic.isActive) {
                     val dx = x - previousX
                     if (Math.abs(lastDx + dx) < Math.abs(lastDx) + Math.abs(dx) && Math.abs(dx) > RESET_STARTING
                             && Math.abs(x - startingX) > SWIPE_MIN_DISTANCE) {
@@ -66,24 +67,24 @@ internal class InputListener(private val mView: GamePlayView, var activity: Acti
                             moved = true
                             previousDirection = previousDirection * 2
                             veryLastDirection = 2
-                            mView.game.move(2)
+                            gamePlayView.gameLogic.move(2)
                         } else if ((dy <= -SWIPE_THRESHOLD_VELOCITY && Math.abs(dy) >= Math.abs(dx) || y - startingY <= -MOVE_THRESHOLD) && previousDirection % 3 != 0) {
                             moved = true
                             previousDirection = previousDirection * 3
                             veryLastDirection = 3
-                            mView.game.move(0)
+                            gamePlayView.gameLogic.move(0)
                         }
                         //Horizontal
                         if ((dx >= SWIPE_THRESHOLD_VELOCITY && Math.abs(dx) >= Math.abs(dy) || x - startingX >= MOVE_THRESHOLD) && previousDirection % 5 != 0) {
                             moved = true
                             previousDirection = previousDirection * 5
                             veryLastDirection = 5
-                            mView.game.move(1)
+                            gamePlayView.gameLogic.move(1)
                         } else if ((dx <= -SWIPE_THRESHOLD_VELOCITY && Math.abs(dx) >= Math.abs(dy) || x - startingX <= -MOVE_THRESHOLD) && previousDirection % 7 != 0) {
                             moved = true
                             previousDirection = previousDirection * 7
                             veryLastDirection = 7
-                            mView.game.move(3)
+                            gamePlayView.gameLogic.move(3)
                         }
                         if (moved) {
                             hasMoved = true
@@ -103,26 +104,23 @@ internal class InputListener(private val mView: GamePlayView, var activity: Acti
                 veryLastDirection = 1
                 //"Menu" inputs
                 if (!hasMoved) {
-                    if (iconPressedNew(mView.sXNewGame - mView.iconSize * 3, mView.sYIcons)) {
-                        if (!mView.game.gameLost()) {
+                    if (iconPressedNew(gamePlayView.sXNewGame - gamePlayView.iconSize * 3, gamePlayView.sYIcons)) {
+                        if (!gamePlayView.gameLogic.gameLost()) {
                             AlertDialog.Builder(activity)
-                                    .setPositiveButton("R.string.reset") { dialog, which -> mView.game.newGame() }
-                                    .setNegativeButton("R.string.continue_game", null)
-                                    .setMessage("R.string.reset_dialog_message")
+                                    .setMessage(R.string.reset_dialog_message)
+                                    .setPositiveButton(R.string.reset) { dialog, which ->
+                                        gamePlayView.gameLogic.newGame()
+                                    }
+                                    .setNegativeButton(R.string.continue_game, null)
                                     .show()
                         } else {
-                            mView.game.newGame()
+                            gamePlayView.gameLogic.newGame()
                         }
-                    } else if (iconPressedUndo(mView.sXUndo, mView.sYIcons)) {
-                        mView.game.revertUndoState()
-                        /*try {
-                            throw new RuntimeException("Original Exception");
-                        } catch (RuntimeException e) {
-                            throw new RuntimeException("Check out buddybuild Crash Reporting!");
-                        }*/
-                    } else if (isTap(2) && inRange(mView.startingX.toFloat(), x, mView.endingX.toFloat())
-                            && inRange(mView.startingY.toFloat(), x, mView.endingY.toFloat()) && mView.continueButtonEnabled) {
-                        mView.game.setEndlessMode()
+                    } else if (iconPressedUndo(gamePlayView.sXUndo, gamePlayView.sYIcons)) {
+                        gamePlayView.gameLogic.revertUndoState()
+                    } else if (isTap(2) && inRange(gamePlayView.startingX.toFloat(), x, gamePlayView.endingX.toFloat())
+                            && inRange(gamePlayView.startingY.toFloat(), x, gamePlayView.endingY.toFloat()) && gamePlayView.continueButtonEnabled) {
+                        gamePlayView.gameLogic.setEndlessMode()
                     }
                 }
             }
@@ -136,14 +134,14 @@ internal class InputListener(private val mView: GamePlayView, var activity: Acti
 
     private fun iconPressedNew(sx: Int, sy: Int): Boolean {
         return (isTap(1)
-                && inRange(sx.toFloat(), x, mView.sXNewGame.toFloat())
-                && inRange(sy.toFloat(), y, (sy + mView.iconSize).toFloat()))
+                && inRange(sx.toFloat(), x, gamePlayView.sXNewGame.toFloat())
+                && inRange(sy.toFloat(), y, (sy + gamePlayView.iconSize).toFloat()))
     }
 
     private fun iconPressedUndo(sx: Int, sy: Int): Boolean {
         return (isTap(1)
-                && inRange(sx.toFloat(), x, (mView.sXUndo + mView.iconSize * 3).toFloat())
-                && inRange(sy.toFloat(), y, (sy + mView.iconSize).toFloat()))
+                && inRange(sx.toFloat(), x, (gamePlayView.sXUndo + gamePlayView.iconSize * 3).toFloat())
+                && inRange(sy.toFloat(), y, (sy + gamePlayView.iconSize).toFloat()))
     }
 
     private fun inRange(starting: Float, check: Float, ending: Float): Boolean {
@@ -151,7 +149,7 @@ internal class InputListener(private val mView: GamePlayView, var activity: Acti
     }
 
     private fun isTap(factor: Int): Boolean {
-        return pathMoved() <= mView.iconSize * factor
+        return pathMoved() <= gamePlayView.iconSize * factor
     }
 
     companion object {

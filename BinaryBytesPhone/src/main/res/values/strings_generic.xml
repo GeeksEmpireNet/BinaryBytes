@@ -33,8 +33,8 @@
     <string name="stringUpcomingChangeLogPhone" translatable="false">string_upcoming_change_log_phone</string>
     <string name="stringUpcomingChangeLogSummaryPhone" translatable="false">string_upcoming_change_log_summary_phone</string>
 
-    <string name="ad_app_id" translatable="false">ca-app-pub-2920235108594210~1473436107</string>
-    <string name="ad_unit_reward" translatable="false">ca-app-pub-2920235108594210/9111596436</string>
-    <string name="ad_unit_interstitial">ca-app-pub-2920235108594210/9278360811</string>
+    <string name="AdAppId" translatable="false">ca-app-pub-2920235108594210~1473436107</string>
+    <string name="adUnitReward" translatable="false">ca-app-pub-2920235108594210/9111596436</string>
+    <string name="adUnitInterstitial">ca-app-pub-2920235108594210/9278360811</string>
 
 </resources>

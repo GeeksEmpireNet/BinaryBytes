@@ -1,7 +1,7 @@
 package net.geekstools.numbers.GameView
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import java.util.*
 
 class MainGame(private val mContext: Context, private val mView: GamePlayView) {

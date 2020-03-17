@@ -1,10 +1,11 @@
 package net.geekstools.numbers.GameView
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
+import net.geekstools.trexrunner.Util.AdsInterface
 import java.util.*
 
-class MainGame(private val mContext: Context, private val mView: GamePlayView) {
+class GameLogic(private val context: Context, private val gamePlayView: GamePlayView, private val adsInterface: AdsInterface) {
 
     var gameState = GAME_NORMAL
     var lastGameState = GAME_NORMAL
@@ -23,12 +24,14 @@ class MainGame(private val mContext: Context, private val mView: GamePlayView) {
         get() = !(gameWon() || gameLost())
 
     init {
-        endingMaxValue = Math.pow(2.0, (mView.numCellTypes - 1).toDouble()).toInt()
+        endingMaxValue = Math.pow(2.0, (gamePlayView.numCellTypes - 1).toDouble()).toInt()
 
         grid = Grid(numSquaresX, numSquaresY)
     }
 
     fun newGame() {
+        adsInterface.showInterstitialAd()
+
         if (grid == null) {
             grid = Grid(numSquaresX, numSquaresY)
         } else {
@@ -45,9 +48,9 @@ class MainGame(private val mContext: Context, private val mView: GamePlayView) {
         score = 0
         gameState = GAME_NORMAL
         addStartTiles()
-        mView.refreshLastTime = true
-        mView.resyncTime()
-        mView.invalidate()
+        gamePlayView.refreshLastTime = true
+        gamePlayView.resyncTime()
+        gamePlayView.invalidate()
     }
 
     private fun addStartTiles() {
@@ -72,14 +75,14 @@ class MainGame(private val mContext: Context, private val mView: GamePlayView) {
     }
 
     private fun recordHighScore() {
-        val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+        val settings = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = settings.edit()
         editor.putLong(HIGH_SCORE, highScore)
         editor.apply()
     }
 
     private fun getHighScores(): Long {
-        val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+        val settings = PreferenceManager.getDefaultSharedPreferences(context)
         return settings.getLong(HIGH_SCORE, -1)
     }
 
@@ -114,13 +117,15 @@ class MainGame(private val mContext: Context, private val mView: GamePlayView) {
 
     fun revertUndoState() {
         if (canUndo) {
+            adsInterface.showInterstitialAd()
+
             canUndo = false
             aGrid.cancelAnimations()
             grid.revertTiles()
             score = lastScore
             gameState = lastGameState
-            mView.refreshLastTime = true
-            mView.invalidate()
+            gamePlayView.refreshLastTime = true
+            gamePlayView.invalidate()
         }
     }
 
@@ -202,8 +207,8 @@ class MainGame(private val mContext: Context, private val mView: GamePlayView) {
             if (direction == 1) {
             }
         }
-        mView.resyncTime()
-        mView.invalidate()
+        gamePlayView.resyncTime()
+        gamePlayView.invalidate()
     }
 
     private fun checkLose() {
@@ -311,8 +316,8 @@ class MainGame(private val mContext: Context, private val mView: GamePlayView) {
 
     fun setEndlessMode() {
         gameState = GAME_ENDLESS
-        mView.invalidate()
-        mView.refreshLastTime = true
+        gamePlayView.invalidate()
+        gamePlayView.refreshLastTime = true
     }
 
     fun canContinue(): Boolean {

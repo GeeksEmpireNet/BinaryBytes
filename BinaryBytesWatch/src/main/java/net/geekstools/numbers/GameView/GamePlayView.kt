@@ -98,7 +98,7 @@ class GamePlayView(context: Context, var activity: Activity) : View(context) {
             lightUpRectangle = getDrawable(R.drawable.light_up_rectangle)
             fadeRectangle = getDrawable(R.drawable.fade_rectangle)
             this.setBackgroundColor(context.getColor(R.color.light))
-            val font = Typeface.createFromAsset(resources.assets, "ClearSans-Bold.ttf")
+            val font = Typeface.createFromAsset(resources.assets, "clear_sans_bold.ttf")
             paint.typeface = font
             paint.isAntiAlias = true
 

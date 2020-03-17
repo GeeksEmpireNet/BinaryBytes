@@ -11,11 +11,13 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
 import net.geekstools.numbers.R
+import net.geekstools.trexrunner.Util.AdsInterface
 
-class GamePlayView(context: Context, activity: Activity) : View(context) {
+class GamePlayView(context: Context, activity: Activity, adsInterface: AdsInterface) : View(context) {
+
     val numCellTypes = 21
     private val bitmapCell = arrayOfNulls<BitmapDrawable>(numCellTypes)
-    val game: MainGame
+    val gameLogic: GameLogic
 
     //Internal variables
     private val paint = Paint()
@@ -96,7 +98,7 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
     init {
 
         //Loading resources
-        game = MainGame(context, this)
+        gameLogic = GameLogic(context, this, adsInterface)
         try {
             //Getting assets
             backgroundRectangle = getDrawable(R.drawable.background_rectangle)
@@ -105,7 +107,7 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
             lightUpRectangle = getDrawable(R.drawable.light_up_rectangle)
             fadeRectangle = getDrawable(R.drawable.fade_rectangle)
             this.setBackgroundColor(context.getColor(R.color.light))
-            val font = Typeface.createFromAsset(resources.assets, "ClearSans-Bold.ttf")
+            val font = Typeface.createFromAsset(resources.assets, "clear_sans_bold.ttf")
             paint.typeface = font
             paint.isAntiAlias = true
 
@@ -114,7 +116,7 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
         }
 
         setOnTouchListener(InputListener(this, activity))
-        game.newGame()
+        gameLogic.newGame()
     }
 
     public override fun onDraw(canvas: Canvas) {
@@ -124,26 +126,26 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
 
         drawScoreText(canvas)
 
-        if (!game.isActive && !game.aGrid.isAnimationActive()) {
+        if (!gameLogic.isActive && !gameLogic.aGrid.isAnimationActive()) {
             drawNewGameButton(canvas, true)
         }
 
         drawCells(canvas)
 
-        if (!game.isActive) {
+        if (!gameLogic.isActive) {
             drawEndGameState(canvas)
         }
 
-        if (!game.canContinue()) {
+        if (!gameLogic.canContinue()) {
             drawEndlessText(canvas)
         }
 
         //Refresh the screen if there is still an animation running
-        if (game.aGrid.isAnimationActive()) {
+        if (gameLogic.aGrid.isAnimationActive()) {
             invalidate(startingX, startingY, endingX, endingY)
             tick()
             //Refresh one last time on game end.
-        } else if (!game.isActive && refreshLastTime) {
+        } else if (!gameLogic.isActive && refreshLastTime) {
             invalidate()
             refreshLastTime = false
         }
@@ -178,8 +180,8 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
         paint.textSize = bodyTextSize
         paint.textAlign = Paint.Align.CENTER
 
-        val bodyWidthHighScore = paint.measureText("" + game.highScore).toInt()
-        val bodyWidthScore = paint.measureText("" + game.score).toInt()
+        val bodyWidthHighScore = paint.measureText("" + gameLogic.highScore).toInt()
+        val bodyWidthScore = paint.measureText("" + gameLogic.score).toInt()
 
         val textWidthHighScore = Math.max(titleWidthHighScore, bodyWidthHighScore) + textPaddingSize * 2
         val textWidthScore = Math.max(titleWidthScore, bodyWidthScore) + textPaddingSize * 2
@@ -202,7 +204,7 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
                 (sXHighScore + textMiddleHighScore).toFloat(), titleStartYAll.toFloat(), paint)
         paint.textSize = bodyTextSize
         paint.color = context.getColor(R.color.light)
-        canvas.drawText(game.highScore.toString(), (sXHighScore + textMiddleHighScore).toFloat(), bodyStartYAll.toFloat(), paint)
+        canvas.drawText(gameLogic.highScore.toString(), (sXHighScore + textMiddleHighScore).toFloat(), bodyStartYAll.toFloat(), paint)
 
         //Score
         backgroundRectangle!!.setBounds(sXScore - 13, sYAll - 5, eXScore - 1, eYAll + 3)
@@ -213,7 +215,7 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
                 (sXScore + textMiddleScore - 7).toFloat(), titleStartYAll.toFloat(), paint)
         paint.textSize = bodyTextSize
         paint.color = context.getColor(R.color.light)
-        canvas.drawText(game.score.toString(), (sXScore + textMiddleScore - 7).toFloat(), bodyStartYAll.toFloat(), paint)
+        canvas.drawText(gameLogic.score.toString(), (sXScore + textMiddleScore - 7).toFloat(), bodyStartYAll.toFloat(), paint)
     }
 
     private fun drawNewGameButton(canvas: Canvas, lightUp: Boolean) {
@@ -289,8 +291,8 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
         val resources = resources
         val backgroundCell = getDrawable(R.drawable.cell_rectangle)
         // Outputting the game grid
-        for (xx in 0 until game.numSquaresX) {
-            for (yy in 0 until game.numSquaresY) {
+        for (xx in 0 until gameLogic.numSquaresX) {
+            for (yy in 0 until gameLogic.numSquaresY) {
                 val sX = startingX + gridWidth + (cellSize + gridWidth) * xx
                 val eX = sX + cellSize
                 val sY = startingY + gridWidth + (cellSize + gridWidth) * yy
@@ -305,33 +307,33 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
         paint.textSize = textSize
         paint.textAlign = Paint.Align.CENTER
         // Outputting the individual cells
-        for (xx in 0 until game.numSquaresX) {
-            for (yy in 0 until game.numSquaresY) {
+        for (xx in 0 until gameLogic.numSquaresX) {
+            for (yy in 0 until gameLogic.numSquaresY) {
                 val sX = startingX + gridWidth + (cellSize + gridWidth) * xx
                 val eX = sX + cellSize
                 val sY = startingY + gridWidth + (cellSize + gridWidth) * yy
                 val eY = sY + cellSize
 
-                val currentTile = game.grid!!.getCellContent(xx, yy)
+                val currentTile = gameLogic.grid!!.getCellContent(xx, yy)
                 if (currentTile != null) {
                     //Get and represent the value of the tile
                     val value = currentTile.value
                     val index = log2(value)
 
                     //Check for any active animations
-                    val aArray = game.aGrid.getAnimationCell(xx, yy)
+                    val aArray = gameLogic.aGrid.getAnimationCell(xx, yy)
                     var animated = false
                     for (i in aArray.indices.reversed()) {
                         val aCell = aArray[i]
                         //If this animation is not active, skip it
-                        if (aCell.animationType == MainGame.SPAWN_ANIMATION) {
+                        if (aCell.animationType == GameLogic.SPAWN_ANIMATION) {
                             animated = true
                         }
                         if (!aCell.isActive) {
                             continue
                         }
 
-                        if (aCell.animationType == MainGame.SPAWN_ANIMATION) { // Spawning animation
+                        if (aCell.animationType == GameLogic.SPAWN_ANIMATION) { // Spawning animation
                             val percentDone = aCell.percentageDone
                             val textScaleSize = percentDone.toFloat()
                             paint.textSize = textSize * textScaleSize
@@ -339,7 +341,7 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
                             val cellScaleSize = cellSize / 2 * (1 - textScaleSize)
                             bitmapCell[index]!!.setBounds((sX + cellScaleSize).toInt(), (sY + cellScaleSize).toInt(), (eX - cellScaleSize).toInt(), (eY - cellScaleSize).toInt())
                             bitmapCell[index]!!.draw(canvas)
-                        } else if (aCell.animationType == MainGame.MERGE_ANIMATION) { // Merging Animation
+                        } else if (aCell.animationType == GameLogic.MERGE_ANIMATION) { // Merging Animation
                             val percentDone = aCell.percentageDone
                             val textScaleSize = (1.0 + INITIAL_VELOCITY * percentDone
                                     + MERGING_ACCELERATION.toDouble() * percentDone * percentDone / 2).toFloat()
@@ -348,7 +350,7 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
                             val cellScaleSize = cellSize / 2 * (1 - textScaleSize)
                             bitmapCell[index]!!.setBounds((sX + cellScaleSize).toInt(), (sY + cellScaleSize).toInt(), (eX - cellScaleSize).toInt(), (eY - cellScaleSize).toInt())
                             bitmapCell[index]!!.draw(canvas)
-                        } else if (aCell.animationType == MainGame.MOVE_ANIMATION) {  // Moving animation
+                        } else if (aCell.animationType == GameLogic.MOVE_ANIMATION) {  // Moving animation
                             val percentDone = aCell.percentageDone
                             var tempIndex = index
                             if (aArray.size >= 2) {
@@ -379,20 +381,20 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
     private fun drawEndGameState(canvas: Canvas) {
         var alphaChange = 1.0
         continueButtonEnabled = false
-        for (animation in game.aGrid.globalAnimation) {
-            if (animation.animationType == MainGame.FADE_GLOBAL_ANIMATION) {
+        for (animation in gameLogic.aGrid.globalAnimation) {
+            if (animation.animationType == GameLogic.FADE_GLOBAL_ANIMATION) {
                 alphaChange = animation.percentageDone
             }
         }
         var displayOverlay: BitmapDrawable? = null
-        if (game.gameWon()) {
-            if (game.canContinue()) {
+        if (gameLogic.gameWon()) {
+            if (gameLogic.canContinue()) {
                 continueButtonEnabled = true
                 displayOverlay = winGameContinueOverlay
             } else {
                 displayOverlay = winGameFinalOverlay
             }
-        } else if (game.gameLost()) {
+        } else if (gameLogic.gameLost()) {
             displayOverlay = loseGameOverlay
         }
 
@@ -485,7 +487,7 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
 
     private fun tick() {
         val currentTime = System.nanoTime()
-        game.aGrid.tickAll(currentTime - lastFPSTime)
+        gameLogic.aGrid.tickAll(currentTime - lastFPSTime)
         lastFPSTime = currentTime
     }
 
@@ -494,7 +496,7 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
     }
 
     private fun getLayout(width: Int, height: Int) {
-        cellSize = Math.min(width / (game.numSquaresX + 1), height / (game.numSquaresY + 3))
+        cellSize = Math.min(width / (gameLogic.numSquaresX + 1), height / (gameLogic.numSquaresY + 3))
         gridWidth = cellSize / 7
         val screenMiddleX = width / 2
         val screenMiddleY = height / 2
@@ -502,8 +504,8 @@ class GamePlayView(context: Context, activity: Activity) : View(context) {
         iconSize = cellSize / 2
 
         //Grid Dimensions
-        val halfNumSquaresX = game.numSquaresX / 2.0
-        val halfNumSquaresY = game.numSquaresY / 2.0
+        val halfNumSquaresX = gameLogic.numSquaresX / 2.0
+        val halfNumSquaresY = gameLogic.numSquaresY / 2.0
         startingX = (screenMiddleX.toDouble() - (cellSize + gridWidth) * halfNumSquaresX - (gridWidth / 2).toDouble()).toInt()
         endingX = (screenMiddleX.toDouble() + (cellSize + gridWidth) * halfNumSquaresX + (gridWidth / 2).toDouble()).toInt()
         startingY = (boardMiddleY.toDouble() - (cellSize + gridWidth) * halfNumSquaresY - (gridWidth / 2).toDouble()).toInt()

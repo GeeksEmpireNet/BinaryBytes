@@ -35,10 +35,11 @@
             android:value="true" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/ad_app_id" />
+            android:value="@string/AdAppId" />
 
         <activity
             android:name=".NumbersActivity"
+            android:screenOrientation="sensorPortrait"
             android:theme="@style/GeeksEmpire">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

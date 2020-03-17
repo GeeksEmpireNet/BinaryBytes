@@ -26,13 +26,14 @@
         android:layout_width="match_parent"
         android:layout_height="457dp"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:background="@color/light" />
 
     <RelativeLayout
         android:id="@+id/guide"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:background="@color/default_color">
 
         <ImageView
